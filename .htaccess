@@ -1,0 +1,8 @@
+# Ruta: C:/xampp/htdocs/katana/.htaccess
+
+# Evita mostrar el listado de directorios
+Options -Indexes
+
+# Redirige automáticamente a la carpeta /public/
+RewriteEngine On
+RewriteRule ^$ public/ [L,R=302]

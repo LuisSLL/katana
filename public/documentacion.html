@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación del Framework Katana</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --code-bg: #f8f9fa;
+            --code-block-border: #0d6efd;
+            --border-color: #dee2e6;
+        }
+        
+        [data-bs-theme="dark"] {
+            --bg-color: #212529;
+            --text-color: #f8f9fa;
+            --card-bg: #2c3034;
+            --code-bg: #343a40;
+            --code-block-border: #6ea8fe;
+            --border-color: #495057;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-color: var(--border-color);
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--code-block-border);
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            color: var(--text-color);
+        }
+        
+        .folder-structure {
+            background-color: var(--code-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+        
+        h2 {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        code:not([class*="language-"]) {
+            background-color: var(--code-bg);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            color: var(--text-color);
+        }
+        
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="mb-0 text-primary">
+                    <i class="bi bi-code-square me-2"></i> Documentación <strong>Katana</strong>
+                </h1>
+                <p class="lead text-muted">Framework PHP para desarrollo ágil</p>
+            </div>
+            <div class="theme-toggle" id="themeToggle">
+                <i class="bi bi-moon-fill" id="themeIcon"></i>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-gear me-2"></i>1. Configuración de entorno y acceso local</h2>
+                <p>Katana se ejecuta en <code>http://katana.local</code> mediante configuración de Virtual Host.</p>
+                
+                <div class="code-block">
+                    <pre><code>&lt;VirtualHost *:80&gt;
+    DocumentRoot "C:/xampp/htdocs/katana/public"
+    ServerName katana.local
+&lt;/VirtualHost&gt;</code></pre>
+                </div>
+                
+                <p>Además, editar el archivo <code>C:\Windows\System32\drivers\etc\hosts</code>:</p>
+                
+                <div class="code-block">
+                    <pre><code>127.0.0.1    katana.local</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-folder2-open me-2"></i>2. Estructura del proyecto</h2>
+                <div class="folder-structure">
+                    <pre><code>katana/
+├── App/
+│   └── Http/
+│       ├── Controllers/
+│       └── Kernel.php
+├── Src/
+│   ├── Core/
+│   └── Helpers/
+├── Resources/
+│   └── Views/
+├── config/
+├── routes/
+├── public/
+├── bootstrap/
+├── .env
+├── composer.json</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-signpost-2 me-2"></i>3. Definir Rutas</h2>
+                <div class="code-block">
+                    <pre><code>// routes/web.php
+$router->get('/', [HomeController::class, 'index']);
+$router->post('/login', [AuthController::class, 'login']);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-controller me-2"></i>4. Controladores</h2>
+                <div class="code-block">
+                    <pre><code>namespace App\Http\Controllers;
+
+class HomeController {
+    public function index() {
+        return view('home');
+    }
+}</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-file-earmark-code me-2"></i>5. Vistas con Layouts</h2>
+                <p>Vista: <code>Resources/Views/home.php</code></p>
+                <div class="code-block">
+                    <pre><code>&lt;?php startSection('content') ?&gt;
+    &lt;h1&gt;Bienvenido a Katana&lt;/h1&gt;
+&lt;?php endSection() ?&gt;
+&lt;?php renderLayout('main') ?&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-database me-2"></i>6. Conexión a Base de Datos</h2>
+                <p>Configura el archivo <code>.env</code>:</p>
+                <div class="code-block">
+                    <pre><code>DB_HOST=127.0.0.1
+DB_NAME=katana_db
+DB_USER=root
+DB_PASS=</code></pre>
+                </div>
+                <p class="mt-3">Obtén instancia:</p>
+                <div class="code-block">
+                    <pre><code>$db = \Src\Core\Database::getInstance();</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-tools me-2"></i>7. Helpers y Utilidades</h2>
+                <div class="code-block">
+                    <pre><code>view('home');
+redirect('/login');
+dd($usuario);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-cpu me-2"></i>8. Kernel</h2>
+                <div class="code-block">
+                    <pre><code>$kernel = new Kernel();
+$kernel->handle($url);</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-lg mb-4">
+            <div class="card-body">
+                <h2 class="card-title"><i class="bi bi-kanban me-2"></i>9. Próximas Implementaciones</h2>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>Clase <code>Request</code> para manejar input</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>Clase <code>Response</code> para salida y redirecciones</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>Middleware: auth, csrf, session, por ruta</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>Sistema de servicios (DI Container)</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>CLI <code>artisan</code> para comandos y migraciones</li>
+                    <li class="list-group-item"><i class="bi bi-arrow-right-circle me-2"></i>ORM y validaciones</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer class="text-center mt-5 py-3 text-muted">
+            <p>Katana Framework - Documentación</p>
+            <p class="small">© 2025 - Todos los derechos reservados</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const htmlElement = document.documentElement;
+            
+            // Verificar preferencia del usuario
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const savedTheme = localStorage.getItem('theme');
+            
+            // Aplicar tema guardado o preferencia del sistema
+            if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+            }
+            
+            // Alternar tema
+            themeToggle.addEventListener('click', function() {
+                if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+                    htmlElement.removeAttribute('data-bs-theme');
+                    themeIcon.classList.replace('bi-sun-fill', 'bi-moon-fill');
+                    localStorage.setItem('theme', 'light');
+                } else {
+                    htmlElement.setAttribute('data-bs-theme', 'dark');
+                    themeIcon.classList.replace('bi-moon-fill', 'bi-sun-fill');
+                    localStorage.setItem('theme', 'dark');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
