@@ -1,7 +1,7 @@
 <?php
 // katana/App/Models/User.php
 
-namespace App\Models;
+namespace App\Http\Models;
 
 use Src\Core\DataBase;
 use PDO;
@@ -34,7 +34,7 @@ class User
         return $stmt->execute([
             $data['name'],
             $data['email'],
-            password_hash($data['password'], PASSWORD_DEFAULT)
+            $data['password']  // ← Contraseña ya viene hasheada
         ]);
     }
 }

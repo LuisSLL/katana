@@ -8,8 +8,15 @@ class AdminController extends BaseController
 {
     public function index()
     {
-        return view('admin');
+        if (!isset($_SESSION['user'])) {
+            redirect('/login');
+            return;
+        }
 
+        $this->view('admin', [
+            'title' => 'Panel de Administración',
+            'user' => $_SESSION['user']
+        ]);
     }
     
 }

@@ -2,7 +2,7 @@
 return [
     'driver'   => 'mysql',
     'host'     => 'localhost',
-    'database' => 'katana_auth',
+    'database' => 'katana_db',
     'username' => 'root',
     'password' => '',
 ];
