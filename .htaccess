@@ -1,3 +1,2 @@
-# katana/.htaccess
 Options -Indexes
 RedirectMatch 403 ^/$

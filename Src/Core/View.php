@@ -1,6 +1,5 @@
 <?php
 //    Src/Core/View.php
-
 namespace Src\Core;
 
 class View

@@ -1,9 +1,9 @@
 <?php
 // bootstrap/app.php
-// Mostrar errores siempre en desarrollo
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // Definir entorno
 define('ENVIRONMENT', 'development');
@@ -14,6 +14,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Helpers
 require_once __DIR__ . '/../Src/Helpers/functions.php';
 require_once __DIR__ . '/../Src/Helpers/ViewHelpers.php';
+show_errors(true);
 
 // Cargar archivo .env   
 // Función env()

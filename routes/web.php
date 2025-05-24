@@ -6,8 +6,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostController;
 
-
-
 // Obtener la instancia del router desde el Kernel
 $router = app()->getRouter();
 
@@ -18,6 +16,9 @@ $router = app()->getRouter();
 */
 
 // Página de inicio
+
+//$router->get('/', [HomeController::class, 'index'])->middleware('auth');
+//$router->get('/home', [HomeController::class, 'index'])->middleware('auth');
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/home', [HomeController::class, 'index']);
 
@@ -42,5 +43,7 @@ $router->get('/logout', [AuthController::class, 'logout']);
 */
 
 // Panel de administración (requiere estar logueado en el futuro)
-$router->get('/admin', [AdminController::class, 'index']);
+
+$router->get('/admin', [AdminController::class, 'index'])->middleware('auth');
 $router->get('/post/{id}', [PostController::class, 'show']);
+

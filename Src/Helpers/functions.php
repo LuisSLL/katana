@@ -1,9 +1,9 @@
 <?php
 //    Src/Helpers/functions.php
-
-// Mostrar errores siempre en entorno local
-error_reporting(E_ALL);
 ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL); 
+// Mostrar errores siempre en entorno local
 
 // Redireccionar a una URL
 if (!function_exists('redirect')) {
