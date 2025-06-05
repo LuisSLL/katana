@@ -1,5 +1,5 @@
 <?php
-
+// Src\Core\Router.php
 namespace Src\Core;
 
 class Router
@@ -71,8 +71,12 @@ class Router
         }
 
         http_response_code(404);
-        echo "404 Not Found";
+        $errorView = __DIR__ . '/../../Resources/Views/errors/404.php';
+        if (file_exists($errorView)) {
+            require $errorView;
+        } else {
+            echo "404 Not Found";
+        }
         return null;
     }
 }
-

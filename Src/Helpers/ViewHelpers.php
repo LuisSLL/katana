@@ -39,7 +39,7 @@ if (!function_exists('yieldSection')) {
     }
 }
 
-// ✅ Agregar esta parte al final
+
 if (!function_exists('partial')) {
     function partial($name, $data = [])
     {

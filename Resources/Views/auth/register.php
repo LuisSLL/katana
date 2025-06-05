@@ -1,47 +1,22 @@
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="d-flex justify-content-end mb-2">
-            <a href="/" class="btn btn-outline-secondary btn-sm">Salir</a>
-        </div>
+<?php layout('auth'); ?> <!-- Usamos layout() en lugar de extend() -->
 
-        <?php if (!empty($_SESSION['error'])): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <?= $_SESSION['error']; unset($_SESSION['error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-            </div>
-        <?php endif; ?>
+<?php section('content'); ?> <!-- Definimos la sección 'content' -->
 
-        <?php if (!empty($_SESSION['success'])): ?>
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <?= $_SESSION['success']; unset($_SESSION['success']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
-            </div>
-        <?php endif; ?>
-
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h4 class="mb-0">Registrarse</h4>
-            </div>
-            <div class="card-body">
-                <form action="/register" method="POST">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nombre</label>
-                        <input type="text" name="name" id="name" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Correo electrónico</label>
-                        <input type="email" name="email" id="email" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control" required>
-                    </div>
-
-                    <button type="submit" class="btn btn-success w-100">Registrarse</button>
-                </form>
-            </div>
-        </div>
+<form action="/register" method="POST">
+    <h2 class="text-center mb-4">Registrarse</h2>
+    <div class="mb-3">
+        <input type="text" name="name" class="form-control" placeholder="Nombre" required>
     </div>
-</div>
+    <div class="mb-3">
+        <input type="email" name="email" class="form-control" placeholder="Correo" required>
+    </div>
+    <div class="mb-3">
+        <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
+    </div>
+    <button type="submit" class="btn btn-success w-100">Crear cuenta</button>
+    <p class="mt-3 text-center">
+        ¿Ya tienes cuenta? <a href="/login">Inicia sesión</a>
+    </p>
+</form>
+
+<?php endSection(); ?>

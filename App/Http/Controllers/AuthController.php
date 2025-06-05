@@ -1,76 +1,70 @@
 <?php
-//  App/Http/Controllers/AuthController.php
-
 namespace App\Http\Controllers;
 
-use Src\Core\BaseController;
 use App\Http\Models\User;
+use Src\Core\BaseController;
 
-class AuthController extends BaseController
+class AuthController extends BaseController 
 {
     public function showLogin()
     {
-        $this->view('auth/login', ['title' => 'Login'], 'auth');
-    }
-
-    public function showRegister()
-    {
-        $this->view('auth/register', ['title' => 'Registro'], 'auth');
+        return view('auth/login');
     }
 
     public function login()
     {
-        $email = ($_POST['email'] ?? '');
-        $password = ($_POST['password'] ?? '');
+        $email = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-        if (!$email || !$password) {
-            $_SESSION['error'] = 'Email y contraseña son obligatorios.';
-            redirect('/login');
+        if (empty($email) || empty($password)) {
+            return view('auth/login', ['error' => 'Todos los campos son obligatorios.']);
         }
 
-        $user = User::findByEmail($email);
+        $user = User::where('email', $email)->first();
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            redirect('/admin');
-            
-        } else {
-            $_SESSION['error'] = 'Credenciales inválidas.';
-            redirect('/login');
+        if ($user && $user->validatePassword($password)) {
+            $_SESSION['user'] = [
+                'id'    => $user->id,
+                'name'  => $user->name,
+                'email' => $user->email,
+            ];
+            return redirect('dashboard');
         }
+
+        return view('auth/login', ['error' => 'Credenciales inválidas.']);
+    }
+
+    public function showRegister()
+    {
+        return view('auth/register');
     }
 
     public function register()
     {
-        $name = ($_POST['name'] ?? '');
-        $email = ($_POST['email'] ?? '');
-        $password = ($_POST['password'] ?? '');
+        $name     = $_POST['name'] ?? '';
+        $email    = $_POST['email'] ?? '';
+        $password = $_POST['password'] ?? '';
 
-        if (!$name || !$email || !$password) {
-            $_SESSION['error'] = 'Todos los campos son obligatorios.';
-            redirect('/register');
+        if (empty($name) || empty($email) || empty($password)) {
+            return view('auth/register', ['error' => 'Todos los campos son obligatorios.']);
         }
 
-        if (User::findByEmail($email)) {
-            $_SESSION['error'] = 'El email ya está registrado.';
-            redirect('/register');
-        }
-
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-        User::create([
-            'name' => $name,
-            'email' => $email,
-            'password' => $hashedPassword
+        $created = User::create([
+            'name'     => $name,
+            'email'    => $email,
+            'password' => $password,
         ]);
 
-        $_SESSION['success'] = 'Registro exitoso. Ya puedes iniciar sesión.';
-        redirect('/login');
+        if ($created) {
+            return redirect('/login');
+        }
+
+        return view('auth/register', ['error' => 'Error al registrar usuario.']);
     }
 
     public function logout()
     {
         session_destroy();
-        redirect('/');
+        return redirect('/login');
     }
 }

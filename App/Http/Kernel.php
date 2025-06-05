@@ -1,21 +1,23 @@
 <?php
+// App/Http/Kernel.php
 
 namespace App\Http;
 
 use Src\Core\Router;
+use Exception;
 
 class Kernel
 {
     protected Router $router;
 
     protected array $middleware = [
-        // Ejemplo de middleware global
-        // \App\Http\Middleware\MaintenanceMiddleware::class,
+        \App\Http\Middleware\MaintenanceMiddleware::class,
+        \App\Http\Middleware\SanitizeInputMiddleware::class,
+        \App\Http\Middleware\CorsMiddleware::class,
     ];
 
     protected array $routeMiddleware = [
         'auth' => \App\Http\Middleware\AuthMiddleware::class,
-        // Agrega más middlewares aquí
     ];
 
     public function __construct()
@@ -30,37 +32,57 @@ class Kernel
 
     public function handle(string $url)
     {
-        $routeData = $this->router->dispatch($url);
+        try {
+            $routeData = $this->router->dispatch($url);
 
-        if (!$routeData) {
-            return;
-        }
-
-        $middlewareStack = array_merge(
-            $this->middleware, // Globales
-            array_map(fn($alias) => $this->resolveMiddleware($alias), $routeData['middleware']) // Por ruta
-        );
-
-        // Ejecutar la pila de middleware en cadena
-        $handler = function () use ($routeData) {
-            $handler = $routeData['handler'];
-            $params = $routeData['params'];
-
-            if (is_array($handler)) {
-                [$controller, $method] = $handler;
-                echo call_user_func_array([new $controller, $method], $params);
-            } elseif (is_callable($handler)) {
-                echo call_user_func_array($handler, $params);
+            if (!$routeData) {
+                http_response_code(404);
+                return view('errors/404');
             }
-        };
 
-        $this->runMiddlewareStack($middlewareStack, $handler);
+            $middlewareStack = array_merge(
+                $this->middleware,
+                array_map(
+                    fn($alias) => $this->resolveMiddleware($alias),
+                    $routeData['middleware']
+                )
+            );
+
+            $handler = function () use ($routeData) {
+                $handler = $routeData['handler'];
+                $params = $routeData['params'];
+
+                if (is_array($handler)) {
+                    [$controller, $method] = $handler;
+
+                    if (!class_exists($controller)) {
+                        throw new Exception("Clase $controller no existe");
+                    }
+
+                    if (!method_exists($controller, $method)) {
+                        throw new Exception("Método $method no existe en $controller");
+                    }
+
+                    echo call_user_func_array([new $controller, $method], $params);
+                } elseif (is_callable($handler)) {
+                    echo call_user_func_array($handler, $params);
+                } else {
+                    throw new Exception("Handler inválido");
+                }
+            };
+
+            $this->runMiddlewareStack($middlewareStack, $handler);
+
+        } catch (Exception $e) {
+            http_response_code(500);
+            exit;
+        }
     }
 
     protected function resolveMiddleware(string $alias)
     {
         if (!isset($this->routeMiddleware[$alias])) {
-            throw new \Exception("Middleware '$alias' no está definido.");
+            throw new Exception("Middleware '$alias' no está definido.");
         }
 
         return $this->routeMiddleware[$alias];

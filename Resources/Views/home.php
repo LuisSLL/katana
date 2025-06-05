@@ -6,7 +6,7 @@
     <!-- Hero Banner Responsive -->
     <section class="hero-banner position-relative vh-100 min-vh-100 overflow-hidden">
         <!-- Imagen de fondo adaptable -->
-        <img src="https://scontent.ffma1-1.fna.fbcdn.net/v/t39.30808-6/494197377_1380217173118004_195369591047476328_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=833d8c&_nc_ohc=jbLvv_MkXkMQ7kNvwEKvUtC&_nc_oc=AdkWCU8WZOm9ZNj8UizPX1yFe94VZHrOFL_QPWWdZVAytvQnVLpyJ7GoxTTT7pxY-J4&_nc_zt=23&_nc_ht=scontent.ffma1-1.fna&_nc_gid=ViNWYVBYpq8HafzovA-7sQ&oh=00_AfKiId3v5mMdJN6wibpaGt93vmXS6aba6sXhHh0e4N1L6Q&oe=6830E541" 
+        <img src="https://scontent.ffma1-1.fna.fbcdn.net/v/t39.30808-6/468406057_1274360707036985_413156395371068075_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=86c6b0&_nc_ohc=8dyBgG2QucMQ7kNvwE36Hzh&_nc_oc=Adnf_g5yEIgNXrx5VkZVm29xrBTZF6PBp1Fgvb-foVmEU96CLxz2QlUvTN9acV62w0M&_nc_zt=23&_nc_ht=scontent.ffma1-1.fna&_nc_gid=F8tW8LjtuuxbdM85s025Tw&oh=00_AfKnx9-7yrwqxS54zDxXLHOkcP54IrcZD6FxSZgHqToybA&oe=683D7E1E"
              alt="Hero Image" 
              class="position-absolute w-100 h-100 object-fit-cover">
         

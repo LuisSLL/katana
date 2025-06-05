@@ -1,4 +1,5 @@
 <?php
+//Config/database.php
 return [
     'driver'   => 'mysql',
     'host'     => 'localhost',

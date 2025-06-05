@@ -1,17 +1,21 @@
-<!-- Resources/Views/layouts/auth.php -->
+<!-- resources/views/layout/auth.php -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?? 'Katana Auth' ?></title>
-    <!-- Bootstrap CDN mínimo -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Katana | <?= $title ?? 'Acceso' ?></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .auth-wrapper { height: 100vh; background: #f8f9fa; }
+        .auth-card { width: 100%; max-width: 400px; border: none; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); }
+    </style>
 </head>
-<body class="bg-light d-flex justify-content-center align-items-center" style="min-height: 100vh;">
-    <main class="container">
-        <?= $content ?>
-    </main>
+<body>
+    <div class="auth-wrapper d-flex align-items-center justify-content-center">
+        <div class="auth-card card p-4">
+            <?php yieldSection('content'); ?> <!-- Cambiamos $content por yieldSection -->
+        </div>
+    </div>
 </body>
 </html>

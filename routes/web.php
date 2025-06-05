@@ -2,48 +2,38 @@
 // routes/web.php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
+
 
 // Obtener la instancia del router desde el Kernel
 $router = app()->getRouter();
 
 /*
 |--------------------------------------------------------------------------
-| Rutas públicas
+| Rutas Públicas
 |--------------------------------------------------------------------------
 */
-
-// Página de inicio
-
-//$router->get('/', [HomeController::class, 'index'])->middleware('auth');
-//$router->get('/home', [HomeController::class, 'index'])->middleware('auth');
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/home', [HomeController::class, 'index']);
 
-// Mostrar formulario de login
-$router->get('/login', [AuthController::class, 'showLogin']);
-// Procesar login
-$router->post('/login', [AuthController::class, 'login']);
-
-// Mostrar formulario de registro
-$router->get('/register', [AuthController::class, 'showRegister']);
-// Procesar registro
-$router->post('/register', [AuthController::class, 'register']);
-
-// Cerrar sesión
-$router->get('/logout', [AuthController::class, 'logout']);
-
+/*
+|--------------------------------------------------------------------------
+| Rutas de Usuario
+|--------------------------------------------------------------------------
+*/
+$router->get('/user/{id}', [UserController::class, 'showProfile']); // 👈 Nueva ruta
 
 /*
 |--------------------------------------------------------------------------
-| Rutas protegidas (futuro middleware para proteger)
+| Rutas de Autenticación
 |--------------------------------------------------------------------------
 */
+$router->get('/login', [AuthController::class, 'showLogin']);
+$router->post('/login', [AuthController::class, 'login']);
+$router->get('/register', [AuthController::class, 'showRegister']);
+$router->post('/register', [AuthController::class, 'register']);
+$router->get('/logout', [AuthController::class, 'logout']);
+$router->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'], ['auth']);
 
-// Panel de administración (requiere estar logueado en el futuro)
-
-$router->get('/admin', [AdminController::class, 'index'])->middleware('auth');
-$router->get('/post/{id}', [PostController::class, 'show']);
 

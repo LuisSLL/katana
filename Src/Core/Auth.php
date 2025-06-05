@@ -1,49 +1,65 @@
 <?php
-//    /Src/Core/Auth.php
+// Src/Core/Auth.php
+
 namespace Src\Core;
+
 use App\Models\User;
 
 class Auth
 {
-    protected static $user;
+    /**
+     * Intenta autenticar un usuario con email/password.
+     * [DeepSeek IA] Retorna ID de usuario (éxito) o false (fallo).
+     */
+    public static function attempt(string $email, string $password): int|false
+    {
+        $user = User::findByEmail($email); // Usa el nuevo método del modelo
+        
+        if ($user && password_verify($password, $user->password)) {
+            self::login($user->id);
+            return $user->id;
+        }
 
-    // Verifica si hay un usuario autenticado
+        return false;
+    }
+
+    /**
+     * Inicia sesión manualmente (ej: después de registro).
+     */
+    public static function login(int $userId): void
+    {
+        $_SESSION['user_id'] = $userId;
+    }
+
+    /**
+     * Cierra la sesión.
+     */
+    public static function logout(): void
+    {
+        session_destroy();
+    }
+
+    /**
+     * Obtiene el ID del usuario autenticado.
+     */
+    public static function id(): ?int
+    {
+        return $_SESSION['user_id'] ?? null;
+    }
+
+    /**
+     * Verifica si hay un usuario logueado.
+     */
     public static function check(): bool
     {
-        return isset($_SESSION['user_id']);
+        return !empty(self::id());
     }
 
-    // Obtiene el usuario autenticado
-    public static function user()
+    /**
+     * Obtiene el modelo User del usuario autenticado.
+     */
+    public static function user(): ?User
     {
-        if (!self::check()) {
-            return null;
-        }
-
-        if (!self::$user) {
-            self::$user = User::find($_SESSION['user_id']);
-        }
-
-        return self::$user;
-    }
-
-    // Intenta autenticar un usuario con email y contraseña
-    public static function attempt($email, $password): bool
-    {
-        $user = User::findByEmail($email);
-
-        if (!$user || !password_verify($password, $user['password'])) {
-            return false;
-        }
-
-        $_SESSION['user_id'] = $user['id'];
-        return true;
-    }
-
-    // Cierra la sesión
-    public static function logout()
-    {
-        unset($_SESSION['user_id']);
-        self::$user = null;
+        return self::check() ? User::find(self::id()) : null;
     }
 }

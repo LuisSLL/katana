@@ -1,40 +1,25 @@
 <?php
-// katana/App/Models/User.php
-
 namespace App\Http\Models;
 
-use Src\Core\DataBase;
-use PDO;
+use Src\Core\Model;
 
-class User
+class User extends Model
 {
-    protected static function db()
+    protected string $table = 'users';
+
+    public static function create(array $data)
     {
-        $database = new DataBase();
-        return $database->getConnection();
+        $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
+        return parent::create($data);
     }
 
-    public static function find($id)
+    public function validatePassword(string $password): bool
     {
-        $stmt = self::db()->prepare("SELECT * FROM users WHERE id = ?");
-        $stmt->execute([$id]);
-        return $stmt->fetch();
+        return password_verify($password, $this->password);
     }
 
-    public static function findByEmail($email)
+    public function roles(): array
     {
-        $stmt = self::db()->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        return $stmt->fetch();
-    }
-
-    public static function create($data)
-    {
-        $stmt = self::db()->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-        return $stmt->execute([
-            $data['name'],
-            $data['email'],
-            $data['password']  // ← Contraseña ya viene hasheada
-        ]);
+        return [];
     }
 }

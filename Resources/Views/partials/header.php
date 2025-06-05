@@ -40,10 +40,13 @@
                             <a class="nav-link active" href="home">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/admin">Documentation</a>
+                            <a class="nav-link" href="admin">Documentation</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login">Access</a>
+                            <a class="nav-link" href="register">Registrate</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login">Access</a>
                         </li>
                         <li class="nav-item ms-2">
                             <div class="form-check form-switch d-flex align-items-center">

@@ -1,6 +1,5 @@
 <?php
 //  Src/Core/BaseController.php
-// Src/Core/BaseController.php
 namespace Src\Core;
 
 class BaseController
