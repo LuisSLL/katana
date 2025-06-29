@@ -3,19 +3,151 @@
 <head>
     <title>Panel de Usuario</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body>
-    <div class="d-flex">
-        <aside class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
-            <h4>Menú</h4>
-            <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link text-white" href="/dashboard">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="<?= url('logout') ?>">Cerrar sesión</a></li>
+<body class="bg-light">
+    <div class="d-flex vh-100">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="bg-dark text-white d-flex flex-column" style="width: 250px; transition: all 0.3s;">
+            <div class="p-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="mb-0">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        <span class="sidebar-text">Panel</span>
+                    </h4>
+                    <button id="toggleSidebar" class="btn btn-link text-white p-0">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </div>
+                
+                <!-- User Info -->
+                <div class="d-flex align-items-center p-2 bg-dark bg-opacity-25 rounded">
+                    <img src="https://via.placeholder.com/40" class="rounded-circle me-2" width="40" height="40">
+                    <div class="sidebar-text">
+                        <div class="fw-bold">Usuario</div>
+                        <small class="text-white-50">Admin</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu -->
+            <ul class="nav nav-pills flex-column mb-auto px-3">
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white active bg-opacity-25 bg-primary" href="/dashboard">
+                        <i class="bi bi-house-door me-2"></i>
+                        <span class="sidebar-text">Inicio</span>
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" href="/profile">
+                        <i class="bi bi-person me-2"></i>
+                        <span class="sidebar-text">Perfil</span>
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" href="/settings">
+                        <i class="bi bi-gear me-2"></i>
+                        <span class="sidebar-text">Configuración</span>
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" href="/notifications">
+                        <i class="bi bi-bell me-2"></i>
+                        <span class="sidebar-text">Notificaciones</span>
+                        <span class="badge bg-danger float-end sidebar-text">3</span>
+                    </a>
+                </li>
             </ul>
+
+            <!-- Footer Menu -->
+            <div class="mt-auto p-3 border-top border-secondary">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="<?= url('logout') ?>">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            <span class="sidebar-text">Cerrar sesión</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </aside>
-        <main class="p-4 flex-grow-1">
+
+        <!-- Main Content -->
+        <main class="p-4 flex-grow-1 overflow-auto">
+            <button id="mobileToggle" class="btn btn-dark mb-3 d-lg-none">
+                <i class="bi bi-list"></i>
+            </button>
             <?php yieldSection('content'); ?>
         </main>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const mobileToggle = document.getElementById('mobileToggle');
+            const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            
+            // Función para alternar el sidebar
+            function toggleSidebar() {
+                const isCollapsed = sidebar.style.width === '80px';
+                
+                if(isCollapsed) {
+                    sidebar.style.width = '250px';
+                    toggleBtn.innerHTML = '<i class="bi bi-chevron-left"></i>';
+                } else {
+                    sidebar.style.width = '80px';
+                    toggleBtn.innerHTML = '<i class="bi bi-chevron-right"></i>';
+                }
+                
+                // Alternar visibilidad del texto
+                sidebarTexts.forEach(text => {
+                    text.style.display = isCollapsed ? 'inline' : 'none';
+                });
+                
+                // Alternar padding para el menú colapsado
+                const menuItems = document.querySelectorAll('.nav-link, .p-3');
+                menuItems.forEach(item => {
+                    if(isCollapsed) {
+                        item.classList.remove('px-2');
+                        item.classList.add('px-3');
+                    } else {
+                        item.classList.remove('px-3');
+                        item.classList.add('px-2');
+                    }
+                });
+            }
+            
+            // Función para alternar en móviles
+            function toggleMobileSidebar() {
+                const isHidden = sidebar.style.marginLeft === '-250px';
+                sidebar.style.marginLeft = isHidden ? '0' : '-250px';
+            }
+            
+            // Event listeners
+            toggleBtn.addEventListener('click', toggleSidebar);
+            mobileToggle.addEventListener('click', toggleMobileSidebar);
+            
+            // Ajustar para móviles al cargar
+            if(window.innerWidth < 992) {
+                sidebar.style.marginLeft = '-250px';
+                sidebar.style.position = 'absolute';
+                sidebar.style.zIndex = '1000';
+                sidebar.style.height = '100vh';
+            }
+            
+            // Manejar redimensionamiento
+            window.addEventListener('resize', function() {
+                if(window.innerWidth >= 992) {
+                    sidebar.style.marginLeft = '0';
+                    sidebar.style.position = 'relative';
+                } else {
+                    sidebar.style.marginLeft = '-250px';
+                    sidebar.style.position = 'absolute';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
