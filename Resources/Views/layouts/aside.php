@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Panel de Usuario</title>
+    <title>Panel administrador</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        .logo-img {
+            height: 30px; /* Ajusta según necesites */
+            object-fit: contain;
+        }
+        .collapsed .logo-img {
+            width: 30px; /* Cuando el sidebar está colapsado */
+            margin-left: 5px;
+        }
+    </style>
 </head>
 <body class="bg-light">
     <div class="d-flex vh-100">
@@ -11,10 +21,11 @@
         <aside id="sidebar" class="bg-dark text-white d-flex flex-column" style="width: 250px; transition: all 0.3s;">
             <div class="p-3">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">
-                        <i class="bi bi-speedometer2 me-2"></i>
-                        <span class="sidebar-text">Panel</span>
-                    </h4>
+                    <div class="d-flex align-items-center">
+                        <!-- Reemplaza con tu imagen de logo -->
+                        <img src="ruta/a/tu/logo.png" alt="Logo" class="logo-img me-2 sidebar-logo">
+                        <h4 class="mb-0 sidebar-text">BE ONLINE</h4>
+                    </div>
                     <button id="toggleSidebar" class="btn btn-link text-white p-0">
                         <i class="bi bi-chevron-left"></i>
                     </button>
@@ -30,6 +41,7 @@
                 </div>
             </div>
 
+            <!-- Resto del código permanece igual -->
             <!-- Menu -->
             <ul class="nav nav-pills flex-column mb-auto px-3">
                 <li class="nav-item mb-1">
@@ -41,9 +53,47 @@
                 <li class="nav-item mb-1">
                     <a class="nav-link text-white" href="/profile">
                         <i class="bi bi-person me-2"></i>
-                        <span class="sidebar-text">Perfil</span>
+                        <span class="sidebar-text">Usuarios</span>
                     </a>
                 </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" href="/profile">
+                        <i class="bi bi-person me-2"></i>
+                        <span class="sidebar-text">Clientes</span>
+                    </a>
+                </li>
+                
+                <!-- Menú desplegable -->
+                <li class="nav-item mb-1 has-treeview">
+                    <a class="nav-link text-white" data-bs-toggle="collapse" href="#reportesCollapse" role="button">
+                        <i class="bi bi-file-earmark-text me-2"></i>
+                        <span class="sidebar-text">Reportes</span>
+                        <i class="bi bi-chevron-down float-end sidebar-text"></i>
+                    </a>
+                    <div class="collapse" id="reportesCollapse">
+                        <ul class="nav nav-treeview flex-column ps-4 py-2">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/reportes/ventas">
+                                    <i class="bi bi-graph-up me-2"></i>
+                                    <span class="sidebar-text">Ventas</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/reportes/inventario">
+                                    <i class="bi bi-box-seam me-2"></i>
+                                    <span class="sidebar-text">Inventario</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/reportes/clientes">
+                                    <i class="bi bi-people me-2"></i>
+                                    <span class="sidebar-text">Clientes</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
                 <li class="nav-item mb-1">
                     <a class="nav-link text-white" href="/settings">
                         <i class="bi bi-gear me-2"></i>
@@ -88,6 +138,7 @@
             const toggleBtn = document.getElementById('toggleSidebar');
             const mobileToggle = document.getElementById('mobileToggle');
             const sidebarTexts = document.querySelectorAll('.sidebar-text');
+            const sidebarLogo = document.querySelector('.sidebar-logo');
             
             // Función para alternar el sidebar
             function toggleSidebar() {
@@ -105,6 +156,13 @@
                 sidebarTexts.forEach(text => {
                     text.style.display = isCollapsed ? 'inline' : 'none';
                 });
+                
+                // Alternar clase para el logo
+                if(isCollapsed) {
+                    sidebarLogo.classList.remove('collapsed');
+                } else {
+                    sidebarLogo.classList.add('collapsed');
+                }
                 
                 // Alternar padding para el menú colapsado
                 const menuItems = document.querySelectorAll('.nav-link, .p-3');
