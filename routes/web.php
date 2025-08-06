@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExampleController;
 
 $router = app()->getRouter();
 
@@ -21,5 +22,8 @@ $router->get('/logout', [LoginController::class, 'logout']);
 
 // Ruta protegida (dashboard)
 $router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
+
+// Ruta para la página de ejemplo
+$router->get('/ejemplo', [ExampleController::class, 'index']);
 
 
