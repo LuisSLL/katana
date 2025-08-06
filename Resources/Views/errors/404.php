@@ -1,92 +1,23 @@
-<?php
-
-namespace Src\Core;
-
-class Router
-{
-    protected $routes = [];
-
-    public function get($uri, $action)
-    {
-        return $this->addRoute('GET', $uri, $action);
-    }
-
-    public function post($uri, $action)
-    {
-        return $this->addRoute('POST', $uri, $action);
-    }
-
-    protected function addRoute($method, $uri, $action)
-    {
-        $uri = '/' . trim($uri, '/');
-
-        $regex = preg_replace(
-            '/\{([a-zA-Z_][a-zA-Z0-9_]*)\}/',
-            '(?P<$1>[^/]+)',
-            $uri
-        );
-
-        $regex = '#^' . $regex . '$#';
-
-        // Creamos un objeto de ruta y devolvemos una instancia para poder encadenar ->middleware()
-        $route = [
-            'uri'        => $uri,
-            'regex'      => $regex,
-            'action'     => $action,
-            'middleware' => [],
-        ];
-
-        $this->routes[$method][] = &$route;
-
-        return new class($route) {
-            protected $route;
-
-            public function __construct(&$route)
-            {
-                $this->route = &$route; // Referencia al array original
-            }
-
-            public function middleware($middleware)
-            {
-                $this->route['middleware'] = is_array($middleware)
-                    ? $middleware
-                    : [$middleware];
-                return $this;
-            }
-        };
-    }
-
-    public function dispatch($uri)
-    {
-        $uri = '/' . trim($uri, '/');
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if (!isset($this->routes[$method])) {
-            http_response_code(404);
-            echo "404 Not Found";
-            return;
-        }
-
-        foreach ($this->routes[$method] as $route) {
-            if (preg_match($route['regex'], $uri, $matches)) {
-                $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
-                return [
-                    'handler'    => $route['action'],
-                    'params'     => $params,
-                    'middleware' => $route['middleware'] ?? []
-                ];
-            }
-        }
-
-        http_response_code(404);
-        $errorView = __DIR__ . '/../../Resources/Views/errors/404.php';
-
-        if (file_exists($errorView)) {
-            require $errorView;
-        } else {
-            echo "404 Not Found";
-        }
-
-        return null;
-    }
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Página no encontrada</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #f8f9fa; }
+        .error-container { min-height: 80vh; display: flex; align-items: center; justify-content: center; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="text-center">
+            <h1 class="display-1 fw-bold text-danger">404</h1>
+            <h2 class="mb-3">Página no encontrada</h2>
+            <p class="lead mb-4">La página que buscas no existe o ha sido movida.</p>
+            <a href="/" class="btn btn-primary">Volver al inicio</a>
+        </div>
+    </div>
+</body>
+</html>

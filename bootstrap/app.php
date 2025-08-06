@@ -19,13 +19,6 @@ $dotenv->load();
 require_once __DIR__ . '/../Src/Helpers/functions.php';
 require_once __DIR__ . '/../Src/Helpers/ViewHelpers.php';
 
-// Función env()
-if (!function_exists('env')) {
-    function env($key, $default = null) {
-        return $_ENV[$key] ?? $default;
-    }
-}
-
 // Configuración de errores
 show_errors(env('APP_DEBUG') === 'true');
 
