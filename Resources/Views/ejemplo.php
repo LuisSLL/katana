@@ -178,6 +178,59 @@ class ExampleTest extends TestCase {
                 <li>Si usas assets personalizados, ponlos en <code>/public</code> y usa <code>asset('archivo')</code> para referenciarlos.</li>
                 <li>Si tienes dudas, revisa el <code>README.md</code> o abre un issue en el repo.</li>
             </ul>
+            <hr class="my-4">
+            <h4>🟢 Integración con Firebase (API REST)</h4>
+            <p>Puedes consumir servicios de Firebase (o cualquier API REST) usando <code>file_get_contents</code>, <code>curl</code> o librerías como <code>guzzlehttp/guzzle</code>:</p>
+            <pre><code class="language-php">// Ejemplo simple con file_get_contents
+$url = 'https://your-firebase.firebaseio.com/usuarios.json';
+$json = file_get_contents($url);
+$data = json_decode($json, true);
+</code></pre>
+            <pre><code class="language-php">// Ejemplo con Guzzle
+// composer require guzzlehttp/guzzle
+use GuzzleHttp\Client;
+$client = new Client();
+$response = $client->get('https://your-firebase.firebaseio.com/usuarios.json');
+$data = json_decode($response->getBody(), true);
+</code></pre>
+            <p>Recuerda nunca exponer claves privadas en el frontend ni en el repo.</p>
+
+            <hr class="my-4">
+            <h4>🟢 Consumo de APIs externas</h4>
+            <p>Para consumir cualquier API externa (REST, GraphQL, etc.):</p>
+            <pre><code class="language-php">$json = file_get_contents('https://api.publicapis.org/entries');
+$apis = json_decode($json, true);
+</code></pre>
+            <p>O usando Guzzle para peticiones más avanzadas:</p>
+            <pre><code class="language-php">$client = new \GuzzleHttp\Client();
+$res = $client->request('GET', 'https://api.publicapis.org/entries');
+$data = json_decode($res->getBody(), true);
+</code></pre>
+
+            <hr class="my-4">
+            <h4>🟢 Despliegue en otros servidores</h4>
+            <ul>
+                <li><strong>Heroku:</strong>
+                    <ol>
+                        <li>Agrega un <code>Procfile</code> con:<br><code>web: php -S 0.0.0.0:$PORT -t public</code></li>
+                        <li>Sube tu repo y haz <code>git push heroku main</code></li>
+                        <li>Configura variables de entorno en el dashboard de Heroku.</li>
+                    </ol>
+                </li>
+                <li><strong>Vercel:</strong>
+                    <ol>
+                        <li>Usa <a href="https://vercel.com/docs/concepts/functions/serverless-functions" target="_blank">Serverless Functions</a> o sube como proyecto PHP estático.</li>
+                        <li>Configura <code>public/</code> como root.</li>
+                    </ol>
+                </li>
+                <li><strong>cPanel/Hosting compartido:</strong>
+                    <ol>
+                        <li>Sube todo el contenido de <code>public/</code> a <code>public_html/</code>.</li>
+                        <li>El resto del framework puede ir fuera de <code>public_html</code> por seguridad.</li>
+                        <li>Configura <code>.htaccess</code> para enrutar todo a <code>index.php</code>.</li>
+                    </ol>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
