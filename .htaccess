@@ -1,2 +1,12 @@
+# Katana Framework - .htaccess raíz
 Options -Indexes
+
+# Bloquea acceso directo a la raíz (opcional, solo si usas public/ como entrypoint)
 RedirectMatch 403 ^/$
+
+# Redirige todo a /public si acceden fuera del entorno virtualhost
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /public/$1 [L,QSA]

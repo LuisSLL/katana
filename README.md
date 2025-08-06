@@ -99,4 +99,37 @@ Documentación oficial (en desarrollo)
 
 Repositorio GitHub ← próximamente
 
+---
+
+## ⚙️ Configuración de .htaccess
+
+El framework requiere dos archivos `.htaccess` para funcionar correctamente:
+
+- **Raíz del proyecto (`.htaccess`)**: Redirige todas las peticiones a la carpeta `/public` si no usas un VirtualHost dedicado.
+- **Carpeta `/public` (`public/.htaccess`)**: Redirige todas las rutas amigables a `index.php` para el enrutamiento interno.
+
+Ejemplo de `.htaccess` en la raíz:
+
+```apache
+Options -Indexes
+RedirectMatch 403 ^/$
+RewriteEngine On
+RewriteCond %{REQUEST_URI} !^/public/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /public/$1 [L,QSA]
+```
+
+Ejemplo de `.htaccess` en `/public`:
+
+```apache
+Options -Indexes
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+```
+
+Asegúrate de tener ambos archivos para que las rutas funcionen tanto en `katana.local` como en `localhost/katana/`.
+
 
