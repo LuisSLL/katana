@@ -122,6 +122,62 @@ $usuarios = User::all();
             </ol>
             <p class="alert alert-info mt-3">Siempre elimina primero las rutas, luego los controladores y finalmente las vistas. Así evitarás errores inesperados.</p>
             <p>Si tienes dudas, puedes dejar solo la ruta de inicio y la vista <code>home.php</code> y construir tu proyecto desde ahí.</p>
+
+            <hr class="my-4">
+            <h2 class="mb-4">Categorías avanzadas y despliegue</h2>
+
+            <h4>🟢 Despliegue en Render.com (o similar)</h4>
+            <p>Para desplegar Katana en <a href="https://render.com/" target="_blank">Render</a> o cualquier servicio similar:</p>
+            <ol>
+                <li>Asegúrate de tener un <code>public/</code> como root y <code>composer.json</code> en la raíz.</li>
+                <li>Sube tu código a GitHub.</li>
+                <li>En Render, crea un nuevo servicio web y conecta tu repo.</li>
+                <li>Configura el build command:<br><code>composer install --no-dev --optimize-autoloader</code></li>
+                <li>Configura el start command:<br><code>php -S 0.0.0.0:10000 -t public</code></li>
+                <li>En "Root Directory" pon <code>public</code> si Render lo pide.</li>
+                <li>Agrega variables de entorno desde tu <code>.env</code> (no subas <code>.env</code> real al repo).</li>
+            </ol>
+            <p class="alert alert-info">Recuerda: Render y otros servicios suelen requerir que el entrypoint sea <code>public/index.php</code>.</p>
+
+            <hr class="my-4">
+            <h4>🟢 Migraciones y base de datos</h4>
+            <p>Katana no incluye un sistema de migraciones propio, pero puedes usar <a href="https://laravel.com/docs/10.x/migrations" target="_blank">Phinx</a> o <a href="https://laravel.com/docs/10.x/migrations" target="_blank">Laravel Migrations</a> si lo deseas.</p>
+            <p>Ejemplo usando <strong>Phinx</strong>:</p>
+            <pre><code class="language-bash">composer require robmorgan/phinx --dev
+vendor/bin/phinx init
+# Edita phinx.php y configura tu base de datos
+vendor/bin/phinx create CreateUsersTable
+vendor/bin/phinx migrate
+</code></pre>
+            <p>Esto te permite crear y versionar tus tablas fácilmente.</p>
+
+            <hr class="my-4">
+            <h4>🟢 Pruebas automáticas</h4>
+            <p>Katana soporta PHPUnit. Los tests van en <code>/tests</code>:</p>
+            <pre><code class="language-php">// tests/ExampleTest.php
+use PHPUnit\Framework\TestCase;
+class ExampleTest extends TestCase {
+    public function testHomeController() {
+        $controller = new HomeController();
+        $result = $controller->index();
+        $this->assertStringContainsString('Katana', $result);
+    }
+}
+</code></pre>
+            <p>Para correr los tests:</p>
+            <pre><code class="language-bash">./vendor/bin/phpunit tests
+</code></pre>
+
+            <hr class="my-4">
+            <h4>🟢 Advertencias y tips extra</h4>
+            <ul>
+                <li>Si cambias la estructura de carpetas, actualiza las rutas y los <code>require_once</code> en <code>public/index.php</code> y <code>bootstrap/app.php</code>.</li>
+                <li>Si usas <code>APP_URL</code> en <code>.env</code>, asegúrate de que coincida con tu dominio real en producción.</li>
+                <li>Para debug avanzado, puedes usar <a href="https://xdebug.org/" target="_blank">Xdebug</a> en local.</li>
+                <li>Para logs, revisa <code>/storage/logs/</code> y asegúrate de que el servidor tenga permisos de escritura.</li>
+                <li>Si usas assets personalizados, ponlos en <code>/public</code> y usa <code>asset('archivo')</code> para referenciarlos.</li>
+                <li>Si tienes dudas, revisa el <code>README.md</code> o abre un issue en el repo.</li>
+            </ul>
         </div>
     </div>
 </div>
