@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +10,9 @@
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <!-- Meta descripción -->
     <meta name="description" content="Descripción predeterminada del sitio">
-    <style>
-        /* Solo esto es necesario para el dark mode */
-        body.dark-mode {
-            background-color: #121212;
-            color: #f8f9fa;
-        }
-        .dark-mode .navbar {
-            background-color: #1a1a1a !important;
-        }
-        .dark-mode .card {
-            background-color: #1e1e1e;
-            border-color: #333;
-        }
-    </style>
 </head>
 <body>
-    <!-- Header con menú de navegación y dark mode -->
+    <!-- Header con menú de navegación -->
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
@@ -47,14 +33,6 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="login">Access</a>
-                        </li>
-                        <li class="nav-item ms-2">
-                            <div class="form-check form-switch d-flex align-items-center">
-                                <input class="form-check-input" type="checkbox" id="darkModeSwitch">
-                                <label class="form-check-label ms-2 text-white" for="darkModeSwitch">
-                                    <i class="bi bi-moon-fill"></i>
-                                </label>
-                            </div>
                         </li>
                     </ul>
                 </div>
