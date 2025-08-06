@@ -1,18 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 
-use Src\Core\BaseController;
-
-class DashboardController extends BaseController
+class DashboardController
 {
     public function index()
     {
-        $user = $_SESSION['user'] ?? null;
-
-        if (!$user) {
-            return redirect('login');
-        }
-
-        return view('admin/dashboard', ['user' => $user]);
+        $user = $_SESSION['user']['username'] ?? 'Invitado';
+        return view('dashboard', ['user' => $user]);
     }
 }

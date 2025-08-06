@@ -1,14 +1,14 @@
 <?php
-// App/Http/Controllers/HomeController
-
 namespace App\Http\Controllers;
 
-use Src\Core\BaseController;
-
-class HomeController extends BaseController
+class HomeController
 {
+    /**
+     * Muestra la página de inicio.
+     */
     public function index()
     {
+        // Aquí podrías cargar datos dinámicos si lo necesitas
         return view('home');
     }
 }

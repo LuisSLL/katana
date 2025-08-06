@@ -2,38 +2,28 @@
 // routes/web.php
 
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ExampleController;
 
-
-// Obtener la instancia del router desde el Kernel
 $router = app()->getRouter();
 
-/*
-|--------------------------------------------------------------------------
-| Rutas Públicas
-|--------------------------------------------------------------------------
-*/
+// Ruta de inicio (home)
 $router->get('/', [HomeController::class, 'index']);
-$router->get('/home', [HomeController::class, 'index']);
 
-/*
-|--------------------------------------------------------------------------
-| Rutas de Usuario
-|--------------------------------------------------------------------------
-*/
-$router->get('/user/{id}', [UserController::class, 'showProfile']); // 👈 Nueva ruta
+// Ruta de perfil de usuario (ejemplo de parámetro)
+$router->get('/user/{id}', [UserController::class, 'showProfile']);
 
-/*
-|--------------------------------------------------------------------------
-| Rutas de Autenticación
-|--------------------------------------------------------------------------
-*/
-$router->get('/login', [AuthController::class, 'showLogin']);
-$router->post('/login', [AuthController::class, 'login']);
-$router->get('/register', [AuthController::class, 'showRegister']);
-$router->post('/register', [AuthController::class, 'register']);
-$router->get('/logout', [AuthController::class, 'logout']);
-$router->get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'], ['auth']);
+// Rutas de autenticación
+$router->get('/login', [LoginController::class, 'showLogin']);
+$router->post('/login', [LoginController::class, 'login']);
+$router->get('/logout', [LoginController::class, 'logout']);
+
+// Ruta protegida (dashboard)
+$router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
+
+// Ruta para la página de ejemplo
+$router->get('/ejemplo', [ExampleController::class, 'index']);
 
 

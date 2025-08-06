@@ -8,13 +8,18 @@
 if (!function_exists('redirect')) {
     /**
      * Redirecciona a una ruta interna usando la función `url()` como base.
-     * Ejemplo: redirect('/login') → http://localhost/proyecto/public/login
+     * Ejemplo: redirect('/login') → http://localhost/katana/public/login
      *
-     * @param string $path Ruta relativa a redireccionar.
+     * @param string $path Ruta relativa o absoluta.
      */
     function redirect($path)
     {
-        header("Location: " . url($path));
+        // Si la ruta ya es absoluta (http/https), no la modifica
+        if (preg_match('#^https?://#', $path)) {
+            header("Location: $path");
+        } else {
+            header("Location: " . url($path));
+        }
         exit;
     }
 }
@@ -114,7 +119,7 @@ function asset(string $path = ''): string
 /**
  * Retorna una URL absoluta desde la raíz del proyecto.
  * Si APP_ENV=production y APP_URL está definido, lo usa.
- * Si no, detecta automáticamente el dominio actual.
+ * Si no, detecta automáticamente el dominio y subcarpeta actual.
  *
  * @param string $path Ruta adicional (opcional).
  * @return string
@@ -122,19 +127,18 @@ function asset(string $path = ''): string
 function url(string $path = ''): string
 {
     $isProduction = env('APP_ENV') === 'production';
-
     if ($isProduction && !empty($_ENV['APP_URL'])) {
-        // En producción, usar APP_URL
         $base = rtrim($_ENV['APP_URL'], '/');
     } else {
-        // En desarrollo: construir base dinámica
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $script = $_SERVER['SCRIPT_NAME'] ?? '';
-        $basePath = rtrim(str_replace('/index.php', '', $script), '/');
+        // Detecta subcarpeta si existe (ej: /katana/public o /katana)
+        $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+        $basePath = str_replace('/index.php', '', $scriptName);
+        // Si estamos en /public, quitarlo para obtener la base real
+        $basePath = preg_replace('#/public$#', '', $basePath);
         $base = $protocol . $host . $basePath;
     }
-
     return rtrim($base, '/') . '/' . ltrim($path, '/');
 }
 

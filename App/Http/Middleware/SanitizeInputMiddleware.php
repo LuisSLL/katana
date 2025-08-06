@@ -3,10 +3,14 @@ namespace App\Http\Middleware;
 
 class SanitizeInputMiddleware
 {
+    /**
+     * Ejemplo de middleware para sanitizar entradas globalmente.
+     */
     public function handle(callable $next)
     {
-        $_GET = filter_input_array(INPUT_GET, FILTER_SANITIZE_SPECIAL_CHARS);
-        $_POST = filter_input_array(INPUT_POST, FILTER_SANITIZE_SPECIAL_CHARS);
-        return $next();
+        // foreach ($_POST as $k => $v) {
+        //     $_POST[$k] = htmlspecialchars($v, ENT_QUOTES, 'UTF-8');
+        // }
+        $next();
     }
 }
