@@ -95,6 +95,33 @@ $usuarios = User::all();
                 <li><a href="https://github.com/tuusuario/katana" target="_blank">Repositorio en GitHub</a></li>
                 <li><a href="/dashboard">Volver al dashboard</a></li>
             </ul>
+            <hr class="my-4">
+            <h3>11. ¿Cómo limpiar el proyecto para tu propio uso?</h3>
+            <p>Cuando quieras empezar tu propio proyecto y no necesites algunos ejemplos (como el dashboard, login, o el usuario de ejemplo), sigue estos pasos para limpiar el código de forma segura:</p>
+            <ol>
+                <li><strong>Elimina las rutas que no usarás</strong> en <code>routes/web.php</code>.<br>
+                    <span class="text-muted">Por ejemplo, si no quieres dashboard ni login, borra o comenta estas líneas:</span>
+                    <pre><code class="language-php">// $router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
+// $router->get('/login', [LoginController::class, 'showLogin']);
+// ...
+</code></pre>
+                </li>
+                <li><strong>Elimina los controladores que no necesitas</strong> en <code>/App/Http/Controllers/</code>.<br>
+                    <span class="text-muted">Por ejemplo, borra <code>DashboardController.php</code> y <code>LoginController.php</code> si no los usarás.</span>
+                </li>
+                <li><strong>Elimina las vistas asociadas</strong> en <code>/Resources/Views/</code>.<br>
+                    <span class="text-muted">Por ejemplo, borra <code>dashboard.php</code> y <code>auth/login.php</code> si no los necesitas.</span>
+                </li>
+                <li><strong>Revisa los layouts y menús</strong>.<br>
+                    <span class="text-muted">Quita enlaces a dashboard o login del <code>header.php</code> si ya no existen.</span>
+                </li>
+                <li><strong>¿Ves un error 404 o "Clase no existe"?</strong><br>
+                    <span class="text-danger">¡No te asustes!</span> Es porque alguna ruta apunta a un controlador que ya no existe. Simplemente revisa <code>routes/web.php</code> y elimina o corrige esa ruta.</li>
+                <li><strong>¿Ves un error de vista?</strong><br>
+                    <span class="text-danger">¡No te asustes!</span> Es porque algún controlador intenta cargar una vista que ya no existe. Revisa el método y corrige el nombre de la vista o crea una nueva.</li>
+            </ol>
+            <p class="alert alert-info mt-3">Siempre elimina primero las rutas, luego los controladores y finalmente las vistas. Así evitarás errores inesperados.</p>
+            <p>Si tienes dudas, puedes dejar solo la ruta de inicio y la vista <code>home.php</code> y construir tu proyecto desde ahí.</p>
         </div>
     </div>
 </div>
