@@ -231,6 +231,35 @@ $data = json_decode($res->getBody(), true);
                     </ol>
                 </li>
             </ul>
+            <hr class="my-4">
+            <h4>🟢 Despliegue en Google Cloud Run</h4>
+            <ol>
+                <li>Crea un archivo <code>Dockerfile</code> en la raíz del proyecto:<br>
+<pre><code class="language-dockerfile">FROM php:8.1-apache
+COPY . /var/www/html/
+WORKDIR /var/www/html
+RUN docker-php-ext-install pdo pdo_mysql
+RUN chown -R www-data:www-data /var/www/html/storage
+</code></pre>
+                </li>
+                <li>Sube tu código a un repositorio (GitHub, GitLab, etc).</li>
+                <li>Entra a Google Cloud Console &gt; Cloud Run y crea un nuevo servicio.</li>
+                <li>Conecta tu repo y selecciona el Dockerfile.</li>
+                <li>Configura variables de entorno desde tu <code>.env</code>.</li>
+                <li>Despliega y accede a la URL pública que te da Cloud Run.</li>
+            </ol>
+            <p class="alert alert-info">Cloud Run escala automáticamente y es ideal para microservicios PHP.</p>
+
+            <hr class="my-4">
+            <h4>🟢 Despliegue en AWS Elastic Beanstalk</h4>
+            <ol>
+                <li>Instala la CLI de Elastic Beanstalk:<br><code>pip install awsebcli</code></li>
+                <li>Inicializa el entorno:<br><code>eb init -p php my-katana-app</code></li>
+                <li>Despliega:<br><code>eb create katana-env</code></li>
+                <li>Configura variables de entorno en el dashboard de AWS.</li>
+                <li>Accede a la URL pública que te da Elastic Beanstalk.</li>
+            </ol>
+            <p class="alert alert-info">Puedes personalizar el entorno agregando un archivo <code>.ebextensions</code> para configuraciones avanzadas.</p>
         </div>
     </div>
 </div>
