@@ -17,7 +17,7 @@ Bienvenido a **Katana**, un micro-framework PHP rápido, minimalista y modular. 
 
 ```
 katana/    
-├── App/           # Controladores, modelos, middlewares  
+├── App/           # Controladores, modelos, middlewares de ejemplo  
 ├── Config/        # Archivos de configuración   
 ├── Core/          # Núcleo del framework (Router, Controller, App, etc.)    
 ├── public/        # Punto de entrada público (index.php, assets)   
@@ -26,9 +26,10 @@ katana/
 ├── Src/           # Componentes, helpers, servicios  
 ├── Storage/       # Logs, caché  
 ├── bootstrap/     # Inicialización del sistema  
-├── .env           # Variables de entorno  
+├── .env.example   # Variables de entorno de ejemplo  
 ├── .htaccess      # Reescritura de URLs  
 ├── setup.php      # Configurador inicial  
+├── tests/         # Pruebas automáticas  
 └── README.md      # Documentación principal
 ```
 
@@ -45,9 +46,11 @@ katana/
    ```bash
    composer install
    ```
-3. **Configura tu entorno local:**
-   - Copia `.env.example` a `.env` y ajusta tus variables.
-   - Configura tu VirtualHost o usa la estructura de carpetas (`localhost/katana/`).
+3. **Copia y configura tu entorno:**
+   ```bash
+   cp .env.example .env
+   # Edita .env según tu entorno
+   ```
 4. **Asegúrate de tener los archivos `.htaccess` correctos** (ver sección más abajo).
 5. **Accede a** `http://katana.local` **o** `http://localhost/katana/public`.
 
@@ -60,7 +63,7 @@ katana/
 $router = app()->getRouter();
 $router->get('/', [HomeController::class, 'index']);
 $router->get('/user/{id}', [UserController::class, 'showProfile']);
-$router->post('/login', [AuthController::class, 'login']);
+$router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
 ```
 
 ```php
@@ -68,7 +71,7 @@ $router->post('/login', [AuthController::class, 'login']);
 namespace App\Http\Controllers;
 class HomeController {
     public function index() {
-        return view('home', ['mensaje' => 'Bienvenido a Katana']);
+        return view('home');
     }
 }
 ```
@@ -91,81 +94,46 @@ $usuarios = User::all();
 // Buscar usuario por ID
 $user = User::find(1);
 
-// Buscar por columna
-$activos = User::where('activo', 1);
-
 // Crear usuario
-$nuevo = User::create(['nombre' => 'Juan', 'email' => 'juan@mail.com']);
+$nuevo = User::create(['name' => 'Juan', 'email' => 'juan@mail.com', 'password' => 'secreto']);
 
-// Actualizar usuario
-$user->update(['nombre' => 'Juan Actualizado']);
-
-// Eliminar usuario
-$user->delete();
-```
-
-### Relaciones
-```php
-// hasMany
-$posts = $user->hasMany(Post::class, 'user_id');
-// belongsTo
-$post = Post::find(1);
-$autor = $post->belongsTo(User::class, 'user_id');
+// Validar contraseña
+$user->validatePassword('secreto');
 ```
 
 ---
 
-## 🔒 Ejemplo de uso: Autenticación
+## 🔒 Ejemplo de uso: Autenticación y Middlewares
+
+- El middleware `AuthMiddleware` protege rutas como `/dashboard`.
+- Ejemplo de login fijo:
 
 ```php
-use Src\Core\Auth;
-
-// Login
-if (Auth::attempt($email, $password)) {
-    redirect('/dashboard');
-} else {
-    echo 'Credenciales incorrectas';
+if ($user === 'katanaframework' && $pass === 'admin123') {
+    $_SESSION['user'] = ['username' => $user];
+    header('Location: /dashboard');
+    exit;
 }
-
-// Verificar usuario logueado
-auth()->check(); // true/false
-
-// Obtener usuario autenticado
-$user = Auth::user();
 ```
 
 ---
 
-## ⚙️ Configuración de .htaccess
+## ⚙️ Configuración de .env
 
-El framework requiere dos archivos `.htaccess` para funcionar correctamente:
+Copia `.env.example` a `.env` y edítalo según tu entorno:
 
-- **Raíz del proyecto (`.htaccess`)**: Redirige todas las peticiones a la carpeta `/public` si no usas un VirtualHost dedicado.
-- **Carpeta `/public` (`public/.htaccess`)**: Redirige todas las rutas amigables a `index.php` para el enrutamiento interno.
-
-Ejemplo de `.htaccess` en la raíz:
-
-```apache
-Options -Indexes
-RedirectMatch 403 ^/$
-RewriteEngine On
-RewriteCond %{REQUEST_URI} !^/public/
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ /public/$1 [L,QSA]
 ```
-
-Ejemplo de `.htaccess` en `/public`:
-
-```apache
-Options -Indexes
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [L]
+APP_ENV=development
+APP_DEBUG=true
+APP_URL=http://localhost/katana
+DB_DRIVER=mysql
+DB_HOST=localhost
+DB_PORT=3306
+DB_DATABASE=katana_db
+DB_USERNAME=root
+DB_PASSWORD=
+DB_CHARSET=utf8mb4
 ```
-
-Asegúrate de tener ambos archivos para que las rutas funcionen tanto en `katana.local` como en `localhost/katana/`.
 
 ---
 
@@ -189,6 +157,16 @@ Asegúrate de tener ambos archivos para que las rutas funcionen tanto en `katana
   - Activa `APP_DEBUG=true` en `.env` para ver detalles.
 - **Sesiones no funcionan:**
   - Verifica permisos de la carpeta `storage/`.
+
+---
+
+## 🧪 Pruebas automáticas
+
+- Los tests de ejemplo están en `/tests` y usan PHPUnit.
+- Para correr los tests:
+  ```bash
+  ./vendor/bin/phpunit tests
+  ```
 
 ---
 
