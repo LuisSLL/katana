@@ -15,89 +15,124 @@ Bienvenido a **Katana**, un micro-framework PHP rápido, minimalista y modular. 
 
 ## 📦 Estructura del proyecto
 
+```
 katana/    
-├── App/ # Controladores, modelos, middlewares  
-├── Config/ # Archivos de configuración   
-├── Core/ # Núcleo del framework (Router, Controller, App, etc.)    
-├── public/ # Punto de entrada público (index.php, assets)   
-├── Resources/  
-│ └── Views/ # Vistas (layouts, parciales, páginas)  
-├── Routes/ # Definición de rutas web  
-├── Src/ # Componentes, helpers, servicios  
-├── Storage/ # Logs, caché  
-├── bootstrap/ # Inicialización del sistema  
-├── .env # Variables de entorno  
-├── .htaccess # Reescritura de URLs  
-├── setup.php # Configurador inicial  
-└── README.md                                                
-
+├── App/           # Controladores, modelos, middlewares  
+├── Config/        # Archivos de configuración   
+├── Core/          # Núcleo del framework (Router, Controller, App, etc.)    
+├── public/        # Punto de entrada público (index.php, assets)   
+├── Resources/     # Vistas, layouts, parciales, páginas  
+├── Routes/        # Definición de rutas web  
+├── Src/           # Componentes, helpers, servicios  
+├── Storage/       # Logs, caché  
+├── bootstrap/     # Inicialización del sistema  
+├── .env           # Variables de entorno  
+├── .htaccess      # Reescritura de URLs  
+├── setup.php      # Configurador inicial  
+└── README.md      # Documentación principal
+```
 
 ---
 
-## 🌐 Configuración del entorno local con `katana.local`
+## ⚡ Guía rápida de inicio
 
-### 1️⃣ Agregar entrada en el archivo `hosts`
-
-Editá el archivo `C:\Windows\System32\drivers\etc\hosts` como **administrador** y agregá:
+1. **Clona el repositorio y entra al directorio:**
+   ```bash
+   git clone ...
+   cd katana
+   ```
+2. **Instala dependencias:**
+   ```bash
+   composer install
+   ```
+3. **Configura tu entorno local:**
+   - Copia `.env.example` a `.env` y ajusta tus variables.
+   - Configura tu VirtualHost o usa la estructura de carpetas (`localhost/katana/`).
+4. **Asegúrate de tener los archivos `.htaccess` correctos** (ver sección más abajo).
+5. **Accede a** `http://katana.local` **o** `http://localhost/katana/public`.
 
 ---
-127.0.0.1 katana.local
 
+## 🛠️ Ejemplo de uso: Rutas y Controladores
 
-> 🛠️ Tip: Abrí **Bloc de notas como administrador**, luego `Archivo > Abrir` y navegá hasta esa ruta para editarlo.
+```php
+// routes/web.php
+$router = app()->getRouter();
+$router->get('/', [HomeController::class, 'index']);
+$router->get('/user/{id}', [UserController::class, 'showProfile']);
+$router->post('/login', [AuthController::class, 'login']);
+```
+
+```php
+// App/Http/Controllers/HomeController.php
+namespace App\Http\Controllers;
+class HomeController {
+    public function index() {
+        return view('home', ['mensaje' => 'Bienvenido a Katana']);
+    }
+}
+```
 
 ---
 
-### 2️⃣ Crear VirtualHost en Apache
+## 🗄️ Ejemplo de uso: ORM y Modelos
 
-Editá el archivo `C:\xampp\apache\conf\extra\httpd-vhosts.conf` y agregá al final:
+```php
+// App/Models/User.php
+namespace App\Models;
+use Src\Core\Model;
+class User extends Model {
+    protected string $table = 'users';
+}
 
-```apache
-<VirtualHost *:80>
-    ServerName katana.local
-    DocumentRoot "C:/xampp/htdocs/katana/public"
+// Obtener todos los usuarios
+$usuarios = User::all();
 
-    <Directory "C:/xampp/htdocs/katana/public">
-        AllowOverride All
-        Require all granted
-    </Directory>
-</VirtualHost>
+// Buscar usuario por ID
+$user = User::find(1);
+
+// Buscar por columna
+$activos = User::where('activo', 1);
+
+// Crear usuario
+$nuevo = User::create(['nombre' => 'Juan', 'email' => 'juan@mail.com']);
+
+// Actualizar usuario
+$user->update(['nombre' => 'Juan Actualizado']);
+
+// Eliminar usuario
+$user->delete();
 ```
 
-📌 Reiniciá Apache desde el panel de XAMPP después de guardar los cambios.
-
-###3️⃣ Activar módulo mod_rewrite
-Asegurate de que la siguiente línea esté descomentada en httpd.conf
-
-LoadModule rewrite_module modules/mod_rewrite.so
-
-Además, asegurate de permitir AllowOverride All
-
-```
-<Directory "C:/xampp/htdocs">
-    AllowOverride All
-</Directory>
+### Relaciones
+```php
+// hasMany
+$posts = $user->hasMany(Post::class, 'user_id');
+// belongsTo
+$post = Post::find(1);
+$autor = $post->belongsTo(User::class, 'user_id');
 ```
 
-###✅ Acceder al proyecto
-Abrí en tu navegador:
+---
 
-http://katana.local
+## 🔒 Ejemplo de uso: Autenticación
 
-Si todo está bien, verás:
-Bienvenid@ a Katana Framework
+```php
+use Src\Core\Auth;
 
-###⚠️ Errores comunes
-404 en localhost/katana/public/: Este framework está pensado para funcionar bajo katana.local. Usar rutas relativas puede causar errores.
+// Login
+if (Auth::attempt($email, $password)) {
+    redirect('/dashboard');
+} else {
+    echo 'Credenciales incorrectas';
+}
 
-HTTPS tachado o advertencia de sitio inseguro: Es normal en localhost sin certificado SSL. Podés ignorarlo o instalar un certificado auto-firmado.
+// Verificar usuario logueado
+auth()->check(); // true/false
 
-No se puede editar hosts: Abrí Bloc de notas como administrador y abrilo desde ahí.
-
-###📚 Enlaces útiles
-Documentación oficial (en desarrollo)
-
-Repositorio GitHub ← próximamente
+// Obtener usuario autenticado
+$user = Auth::user();
+```
 
 ---
 
@@ -131,5 +166,38 @@ RewriteRule ^ index.php [L]
 ```
 
 Asegúrate de tener ambos archivos para que las rutas funcionen tanto en `katana.local` como en `localhost/katana/`.
+
+---
+
+## 🧑‍💻 Contribuir
+
+1. Haz un fork del repositorio.
+2. Crea una rama para tu feature/fix: `git checkout -b mi-feature`
+3. Haz tus cambios y commitea: `git commit -am 'Agrega mi feature'`
+4. Haz push a tu fork: `git push origin mi-feature`
+5. Abre un Pull Request.
+
+---
+
+## ❓ Troubleshooting y Preguntas Frecuentes
+
+- **404 en rutas amigables:**
+  - Verifica que `.htaccess` esté bien configurado y que Apache tenga `mod_rewrite` activo.
+- **Redirecciones incorrectas:**
+  - Asegúrate de definir correctamente `APP_URL` en `.env` si usas subcarpetas o dominios personalizados.
+- **Error 500:**
+  - Activa `APP_DEBUG=true` en `.env` para ver detalles.
+- **Sesiones no funcionan:**
+  - Verifica permisos de la carpeta `storage/`.
+
+---
+
+## 📚 Enlaces útiles
+- [Documentación oficial (en desarrollo)](https://github.com/tuusuario/katana-docs)
+- [Repositorio GitHub](https://github.com/tuusuario/katana)
+
+---
+
+¡Gracias por usar Katana! ⚔️
 
 
