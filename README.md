@@ -67,13 +67,20 @@ $router->get('/dashboard', [DashboardController::class, 'index'], ['auth']);
 ```
 
 ```php
-// App/Http/Controllers/HomeController.php
-namespace App\Http\Controllers;
-class HomeController {
-    public function index() {
-        return view('home');
-    }
-}
+ namespace App\Http\Controllers;
+
+   class HomeController
+   {
+       /**
+        * Muestra la página de inicio.
+        */
+       public function index()
+       {
+           // Aquí podrías cargar datos dinámicos si lo necesitas
+           return view('home');
+       }
+   }
+
 ```
 
 ---
